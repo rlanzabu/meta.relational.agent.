@@ -25,7 +25,7 @@ def main():
 def load_documents():
     document_loader = PyPDFDirectoryLoader(DATA_PATH)
     documents = document_loader.load()
-    print(f"✅ Loaded {len(documents)} pages from PDF")
+    print(f"✅ Loaded {len(documents)} pages (documents) from PDF")
     return documents
 
 def split_documents(documents: list[Document]):
@@ -40,9 +40,9 @@ def split_documents(documents: list[Document]):
 
     # Preview the first chunk
     print("\n--- FIRST CHUNK PREVIEW ---")
-    print(f"Source: {chunks[10].metadata.get('source')}")
-    print(f"Page:   {chunks[10].metadata.get('page')}")
-    print(f"Text:\n{chunks[10].page_content}")
+    print(f"Source: {chunks[30].metadata.get('source')}")
+    print(f"Page:   {chunks[30].metadata.get('page')}")
+    print(f"Text:\n{chunks[30].page_content}")
     print("---------------------------\n")
 
     return chunks
@@ -58,6 +58,7 @@ def add_to_chroma(chunks: list[Document]):
     existing_items = db._collection.get()
     existing_ids = set(existing_items["ids"])
     print(f"Number of existing documents in DB: {len(existing_ids)}")
+
 
     new_chunks = []
     for chunk in chunks_with_ids:
