@@ -12,12 +12,15 @@ class Chunking:
         chunks = text_splitter.split_documents(documents)
         print(f"✅ Split into {len(chunks)} chunks")
 
-        # Preview the first chunk
-        print("\n--- FIRST CHUNK PREVIEW ---")
-        print(f"Source: {chunks[30].metadata.get('source')}")
-        print(f"Page:   {chunks[30].metadata.get('page')}")
-        print(f"Text:\n{chunks[30].page_content}")
-        print("---------------------------\n")
+        # Preview the first chunk if available
+        if chunks:
+            print("\n--- FIRST CHUNK PREVIEW ---")
+            print(f"Source: {chunks[0].metadata.get('source')}")
+            print(f"Page:   {chunks[0].metadata.get('page')}")
+            print(f"Text:\n{chunks[0].page_content}")
+            print("---------------------------\n")
+        else:
+            print("No chunks to preview.")
 
         return chunks
 

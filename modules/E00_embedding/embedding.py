@@ -1,23 +1,23 @@
-from langchain_chroma import Chroma
+
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.documents import Document
-from D00_chunking import chunking
-import os
-import shutil
+from D00_chunking import Chunking
+from E00_embedding.chroma_db import ChromaDB
 
-CHROMA_PATH = "modules/50_embeds_db"
+
 
 class Embedding:
     def get_embedding_function():
         return OllamaEmbeddings(model="nomic-embed-text")
     
+    def connect_to_db():
+        db = ChromaDB.connect_to_chroma_db()
+        return db
+    
     def add_to_chroma(chunks: list[Document]):
-        db = Chroma(
-            persist_directory=CHROMA_PATH,
-            embedding_function=Embedding.get_embedding_function()
-        )
+        db = Embedding.connect_to_db()
 
-        chunks_with_ids = chunking.calculate_chunk_ids(chunks)
+        chunks_with_ids = Chunking.calculate_chunk_ids(chunks)
 
         existing_items = db._collection.get()
         existing_ids = set(existing_items["ids"])
@@ -36,6 +36,3 @@ class Embedding:
         else:
             print("✅ No new documents to add")
 
-    def clear_database():
-        if os.path.exists(CHROMA_PATH):
-            shutil.rmtree(CHROMA_PATH)
