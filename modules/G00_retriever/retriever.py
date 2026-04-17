@@ -1,5 +1,11 @@
+import sys
+from pathlib import Path
+# Add the parent directory (modules/) to Python path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from E00_embedding import ChromaDB
 from H00_llm import LLM
+
 
 class NoResultsFound(Exception):
     """Raised when no results are found for a query."""
@@ -11,7 +17,7 @@ class Retriever:
         db = ChromaDB.connect_to_chroma_db()
 
         # 2. search for the most similar chunks
-        results = db.similarity_search_with_score(query_text, k=5)
+        results = db.similarity_search_with_score(query_text, k=3)
 
         if not results:
             raise NoResultsFound(f"No documents found for query: '{query_text}'")

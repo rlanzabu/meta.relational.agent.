@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import argparse
 from G00_retriever import Retriever, NoResultsFound
 
+
 def main_query():
     parser = argparse.ArgumentParser()
     parser.add_argument("query_text", type=str, help="The query text.")
@@ -19,8 +20,9 @@ def main_query():
     except NoResultsFound as e:
         print(f"❌ {e}")
         return 1
-    
+
     return 0
+
 
 if __name__ == "__main__":
     exit(main_query())

@@ -48,6 +48,23 @@ def main():
     # Split documents
     print("\n✂️  Splitting documents into chunks...")
     chunks = chunker.split_documents(documents)
+
+    # Verify BaseChunker features
+    if chunks:
+        print(f"\n🔍 VERIFICATION:")
+        print(f"  - First chunk ID: {chunks[0].metadata.get('id', 'MISSING')}")
+        print(f"  - Chunking strategy: {chunks[0].metadata.get('chunking_strategy', 'MISSING')}")
+        print(f"  - Total chunks: {len(chunks)}")
+
+        # Check if chunk IDs follow the expected pattern
+        sample_id = chunks[0].metadata.get('id', '')
+        if ':' in sample_id and sample_id.count(':') == 2:
+            print(f"  ✅ Chunk ID format correct (source:page:index)")
+        else:
+            print(f"  ⚠️  Chunk ID format might be incorrect: {sample_id}")
+
+
+
     print(f"✅ Created {len(chunks)} chunks")
 
     # Add to ChromaDB
