@@ -1,6 +1,6 @@
-"""Embedding module - handles document embeddings with Chroma DB."""
+"""Embedding module - handles embeddings and ChromaDB."""
 
-from E00_embedding.embedding import Embedding
-from E00_embedding.chroma_db import ChromaDB
+from .embedding import Embedding
+from .chroma_db import ChromaDB
 
 __all__ = ["Embedding", "ChromaDB"]
