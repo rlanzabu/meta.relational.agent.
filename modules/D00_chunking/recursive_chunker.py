@@ -1,7 +1,3 @@
-# Change this:
-# from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-# To this:
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from typing import List
