@@ -6,6 +6,9 @@ from typing import List, Dict, Any, Optional
 class BaseChunker(ABC):
     """Abstract base class for all chunking strategies"""
 
+    # Indicates whether this chunker uses fixed chunk size and overlap
+    USES_SIZE_OVERLAP = True  # Most chunkers do
+
     def __init__(self, chunk_size: int = 800, chunk_overlap: int = 80):
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap

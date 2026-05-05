@@ -31,14 +31,26 @@ CHUNKER_REGISTRY = {
 STRATEGIES_USE_SIZE_OVERLAP = {"recursive"}  # add "character" later if needed
 
 
-def get_chunker(strategy_name: str, chunk_size: int, chunk_overlap: int):
-    """Factory function to get a chunker instance by name."""
+def get_chunker(strategy_name: str, chunk_size, chunk_overlap):
+    """
+    Factory function to get a chunker instance by name.
+    - For chunkers that declare USES_SIZE_OVERLAP = False, they are instantiated without arguments.
+    - For others, chunk_size and chunk_overlap are passed (must be provided by the caller).
+    """
     strategy_name = strategy_name.lower()
     if strategy_name not in CHUNKER_REGISTRY:
         available = ", ".join(CHUNKER_REGISTRY.keys())
         raise ValueError(f"Unknown chunking strategy: {strategy_name}. Available: {available}")
     chunker_class = CHUNKER_REGISTRY[strategy_name]
-    return chunker_class(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+
+    # Check if this chunker uses size/overlap
+    if hasattr(chunker_class, 'USES_SIZE_OVERLAP') and not chunker_class.USES_SIZE_OVERLAP:
+        # Instantiate without size/overlap
+        return chunker_class()
+    else:
+        # Instantiate with size/overlap (caller must provide valid values)
+        return chunker_class(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+
 
 
 def process_documents(reset: bool = False, chunk_size: int = 800,
