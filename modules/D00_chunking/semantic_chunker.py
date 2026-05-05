@@ -1,4 +1,4 @@
-from langchain_experimental.text_splitter import SemanticChunker
+from langchain_experimental.text_splitter import SemanticChunker as LangchainSemanticChunker
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.documents import Document
 from typing import List
@@ -22,12 +22,10 @@ class SemanticChunker(BaseChunker):
         # Initialize embeddings for semantic chunking
         self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
 
-        # Create semantic splitter
-        self.semantic_splitter = SemanticChunker(
-            embeddings=self.embeddings,
-            breakpoint_threshold_type=breakpoint_threshold_type,  # "percentile", "standard_deviation", "interquartile"
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap
+        # Create semantic splitter using the langchain class (not itself!)
+        self.semantic_splitter = LangchainSemanticChunker(
+            self.embeddings,
+            breakpoint_threshold_type=breakpoint_threshold_type
         )
 
     def split_documents(self, documents: List[Document]) -> List[Document]:
@@ -35,10 +33,8 @@ class SemanticChunker(BaseChunker):
         all_chunks = []
 
         for doc in documents:
-            # Semantic chunking works on text directly
             texts = self.semantic_splitter.split_text(doc.page_content)
 
-            # Create Document objects from chunks
             for i, text in enumerate(texts):
                 chunk_metadata = doc.metadata.copy()
                 chunk_metadata["chunk_index"] = i

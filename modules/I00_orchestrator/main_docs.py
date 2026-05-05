@@ -16,16 +16,19 @@ from E00_embedding.chroma_db import ChromaDB
 
 # Import available chunkers
 from D00_chunking.recursive_chunker import RecursiveChunker
-# Example: if more chunkers, import them here
-# from D00_chunking.semantic_chunker import SemanticChunker
+from D00_chunking.semantic_chunker import SemanticChunker
+
 # from D00_chunking.character_chunker import CharacterChunker
 
 # Registry of chunking strategies
 CHUNKER_REGISTRY = {
     "recursive": RecursiveChunker,
-    # "semantic": SemanticChunker,
+    "semantic": SemanticChunker,
     # "character": CharacterChunker,
 }
+
+# Strategies that actually use chunk_size and chunk_overlap
+STRATEGIES_USE_SIZE_OVERLAP = {"recursive"}  # add "character" later if needed
 
 
 def get_chunker(strategy_name: str, chunk_size: int, chunk_overlap: int):
@@ -47,7 +50,13 @@ def process_documents(reset: bool = False, chunk_size: int = 800,
     print("\n" + "=" * 60)
     print("DOCUMENT PROCESSOR WITH BASECHUNKER")
     print("=" * 60)
-    print(f"Chunk size: {chunk_size}, Overlap: {chunk_overlap}")
+
+    # Only show chunk size/overlap if the strategy actually uses them
+    if chunking_strategy in STRATEGIES_USE_SIZE_OVERLAP:
+        print(f"Chunk size: {chunk_size}, Overlap: {chunk_overlap}")
+    else:
+        print(f"Chunking strategy: {chunking_strategy} (size/overlap not applicable)")
+
     print(f"Chunking strategy: {chunking_strategy}")
 
     if reset:

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Allows the user to select the chunking strategy interactively.
+For recursive (or future character) strategies, asks for chunk size and overlap.
+For semantic strategy, skips those settings.
 """
 import sys
 from pathlib import Path
@@ -28,12 +30,17 @@ def main():
         print(f"❌ Unknown strategy. Using 'recursive'.")
         strategy = "recursive"
 
-    try:
-        chunk_size = int(input("Chunk size (default 800): ").strip() or "800")
-        chunk_overlap = int(input("Chunk overlap (default 80): ").strip() or "80")
-    except ValueError:
-        print("Invalid number, using defaults.")
-        chunk_size, chunk_overlap = 800, 80
+    # Conditionally ask for chunk size & overlap (only for strategies that use them)
+    if strategy == "semantic":
+        print("ℹ️  Semantic chunking does not use fixed chunk size/overlap. Skipping those settings.")
+        chunk_size, chunk_overlap = 800, 80   # Dummy values (ignored by SemanticChunker)
+    else:
+        try:
+            chunk_size = int(input("Chunk size (default 800): ").strip() or "800")
+            chunk_overlap = int(input("Chunk overlap (default 80): ").strip() or "80")
+        except ValueError:
+            print("Invalid number, using defaults.")
+            chunk_size, chunk_overlap = 800, 80
 
     # --- Step 2: Process documents ---
     print("\n📄 Processing documents...")
