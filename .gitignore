@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# PyCharm
+.idea/
+
+# ChromaDB
+chroma/
+**/CHROMA/
+*.sqlite3
+
+# Runtime outputs
+conversation_history.json
+
+# Virtual environment
+.venv/
