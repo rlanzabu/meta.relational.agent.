@@ -17,6 +17,7 @@ from E00_embedding.chroma_db import ChromaDB
 # Import available chunkers
 from D00_chunking.recursive_chunker import RecursiveChunker
 from D00_chunking.semantic_chunker import SemanticChunker
+from D00_chunking.document_structure_aware_chunker import DocumentAwareChunker
 
 # from D00_chunking.character_chunker import CharacterChunker
 
@@ -24,7 +25,7 @@ from D00_chunking.semantic_chunker import SemanticChunker
 CHUNKER_REGISTRY = {
     "recursive": RecursiveChunker,
     "semantic": SemanticChunker,
-    # "character": CharacterChunker,
+    "document_aware": DocumentAwareChunker,
 }
 
 # Strategies that actually use chunk_size and chunk_overlap
@@ -87,6 +88,15 @@ def process_documents(reset: bool = False, chunk_size: int = 800,
     # Split documents
     print("\n✂️  Splitting documents into chunks...")
     chunks = chunker.split_documents(documents)
+
+    # Find a chunk that has heading metadata
+    for i, chunk in enumerate(chunks):
+        if 'h1' in chunk.metadata or 'h2' in chunk.metadata:
+            print(f"\n--- Chunk with heading ---")
+            print(f"Metadata: {chunk.metadata}")
+            print(f"Content preview: {chunk.page_content[:300]}")
+            break
+
 
     # Verify BaseChunker features
     if chunks:
